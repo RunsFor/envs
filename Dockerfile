@@ -3,15 +3,18 @@ ARG CENTOS_VERSION=7
 FROM centos:7 as centos-7
 RUN set -x \
     && yum -y install https://repo.ius.io/ius-release-el7.rpm \
-    && yum -y install git224
+    && yum -y install git224 \
+    && yum clean all
 
 FROM centos:8 as centos-8
 RUN set -x \
-    && yum -y install git
+    && yum -y install git \
+    && yum clean all
 
 FROM centos-${CENTOS_VERSION}
 RUN set -x \
     && yum -y install yum-utils \
     && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
-    && yum -y install docker-ce-cli make python3-pip \
-    && pip3 install --no-cache-dir awscli
+    && yum -y install docker-ce-cli make python3-pip which \
+    && pip3 install --no-cache-dir awscli \
+    && yum clean all
