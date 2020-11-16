@@ -21,5 +21,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          target: centos-7
           tags: ghcr.io/runsfor/envs/centos:7
+          build-args: |
+            CENTOS_VERSION=7
