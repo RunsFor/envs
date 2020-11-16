@@ -17,10 +17,28 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-      - name: Build image
+      - name: Build centos7 image
         uses: docker/build-push-action@v2
         with:
           push: true
           tags: ghcr.io/runsfor/envs/centos:7
+          target: centos
           build-args: |
             CENTOS_VERSION=7
+      - name: Build centos8 image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/runsfor/envs/centos:8
+          target: centos
+          build-args: |
+            CENTOS_VERSION=8
+      - name: Build cartridge-cli image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/runsfor/envs/cartridge:2.4.0
+          target: cartridge-cli
+          build-args: |
+            CENTOS_VERSION=7
+            CARTRIDGE_CLI_VERSION=2.4.0
