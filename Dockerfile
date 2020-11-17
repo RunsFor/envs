@@ -2,7 +2,7 @@
 
 ARG CENTOS_VERSION=7
 ARG IMAGE_TYPE=base
-ARG BASE_TOOLS="which wget"
+ARG BASE_TOOLS="which wget unzip docker-ce-cli python3-pip"
 ARG BUILD_TOOLS="make gcc-c++ glibc-devel libstdc++-devel lua-devel \
                  autoconf automake libtool gcc curl-devel"
 
@@ -21,22 +21,18 @@ RUN set -x \
     && yum -y install git cmake \
     && yum clean all
 
-FROM centos-${CENTOS_VERSION} as centos
-RUN set -x \
-    && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
-    && yum makecache
-
-FROM centos as base
+FROM centos-${CENTOS_VERSION} as base
 ARG BASE_TOOLS
 RUN set -x \
-    && yum -y install ${BASE_TOOLS}
+    && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
+    && yum -y install ${BASE_TOOLS} \
+    && yum clean all \
+    && pip3 install --no-cache-dir awscli
 
 FROM base as build
 ARG BUILD_TOOLS
 RUN set -x \
     && yum -y install ${BUILD_TOOLS} \
-    && yum -y install docker-ce-cli python3-pip unzip \
-    && pip3 install --no-cache-dir awscli \
     && yum clean all
 
 FROM ${IMAGE_TYPE} as tarantool

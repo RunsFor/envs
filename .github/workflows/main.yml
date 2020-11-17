@@ -5,7 +5,32 @@ on:
   push:
 
 jobs:
-  build:
+  build-centos:
+    strategy:
+      matrix:
+        os: ['7', '8']
+        image_type: ['base', 'build']
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: docker/setup-buildx-action@v1
+      # https://docs.github.com/en/free-pro-team@latest/packages/getting-started-with-github-container-registry/migrating-to-github-container-registry-for-docker-images#authenticating-with-the-container-registry
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.CR_PAT }}
+      - name: Build centos v${{ matrix.os }} image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
+          target: tarantool
+          build-args: |
+            CENTOS_VERSION=${{ matrix.os }}
+            IMAGE_TYPE=${{ matrix.image_type }}
+  build-tarantool:
     strategy:
       matrix:
         os: ['7', '8']
@@ -22,7 +47,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-      - name: Build centos7 image
+      - name: Build tarantool v${{ matrix.tarantool }}, centos v${{ matrix.os }} ${{ matrix.image_type }} image
         uses: docker/build-push-action@v2
         with:
           push: true
