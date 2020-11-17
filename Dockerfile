@@ -17,7 +17,9 @@ FROM centos-${CENTOS_VERSION} as centos
 RUN set -x \
     && yum -y install yum-utils \
     && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
-    && yum -y install docker-ce-cli python3-pip which unzip wget make \
+    && yum -y install docker-ce-cli python3-pip which unzip wget \
+    && yum -y install make gcc-c++ glibc-static libstdc++-static \
+                      lua-devel luarocks autoconf automake libtool \
     && pip3 install --no-cache-dir awscli \
     && yum clean all
 
