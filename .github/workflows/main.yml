@@ -6,6 +6,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        os: ['7', '8']
+        image_type: ['base', 'build']
+        tarantool: ['2.2', '2.3', '2.4', '2.5', '2.6']
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2.3.4
@@ -21,25 +26,10 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ghcr.io/runsfor/envs/centos:7
+          tags: ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
           target: build
           build-args: |
-            CENTOS_VERSION=7
-      - name: Build centos8 image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: ghcr.io/runsfor/envs/centos:8
-          target: build
-          build-args: |
-            CENTOS_VERSION=8
-      - name: Build cartridge-cli image
-        uses: docker/build-push-action@v2
-        with:
-          push: true
-          tags: ghcr.io/runsfor/envs/cartridge:2.4.0
-          target: cartridge-cli
-          build-args: |
-            CENTOS_VERSION=8
+            CENTOS_VERSION=${{ matrix.os }}
+            IMAGE_TYPE=${{ matrix.image_type }}
             CARTRIDGE_CLI_VERSION=2.4.0
-            TARANTOOL_VERSION=2.5
+            TARANTOOL_VERSION=${{ matrix.tarantool }}

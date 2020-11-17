@@ -1,4 +1,8 @@
+# syntax=docker/dockerfile:experimental
+
 ARG CENTOS_VERSION=7
+ARG IMAGE_TYPE=base
+ARG BASE_TOOLS="which wget"
 ARG BUILD_TOOLS="make gcc-c++ glibc-devel libstdc++-devel lua-devel \
                  autoconf automake libtool gcc curl-devel"
 
@@ -19,21 +23,26 @@ RUN set -x \
 
 FROM centos-${CENTOS_VERSION} as centos
 RUN set -x \
+    && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
     && yum makecache
 
-FROM centos as build
+FROM centos as base
+ARG BASE_TOOLS
+RUN set -x \
+    && yum -y install ${BASE_TOOLS}
+
+FROM base as build
 ARG BUILD_TOOLS
 RUN set -x \
-    && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
     && yum -y install ${BUILD_TOOLS} \
-    && yum -y install docker-ce-cli python3-pip which unzip wget \
+    && yum -y install docker-ce-cli python3-pip unzip \
     && pip3 install --no-cache-dir awscli \
     && yum clean all
 
-FROM build as cartridge-cli
+FROM ${IMAGE_TYPE} as tarantool
 ARG CARTRIDGE_CLI_VERSION=2.4.0
 ARG TARANTOOL_VERSION=2.5
 RUN set -x \
+    && yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm \
     && curl -L https://tarantool.io/release/${TARANTOOL_VERSION}/installer.sh | bash \
-    && yum -y install tarantool \
-    && yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm
+    && yum -y install tarantool
