@@ -40,5 +40,6 @@ jobs:
           tags: ghcr.io/runsfor/envs/cartridge:2.4.0
           target: cartridge-cli
           build-args: |
-            CENTOS_VERSION=7
+            CENTOS_VERSION=8
             CARTRIDGE_CLI_VERSION=2.4.0
+            TARANTOOL_VERSION=2.5
