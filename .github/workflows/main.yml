@@ -27,7 +27,7 @@ jobs:
         with:
           push: true
           tags: ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
-          target: build
+          target: tarantool
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
