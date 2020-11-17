@@ -19,7 +19,7 @@ RUN set -x \
 
 FROM centos-${CENTOS_VERSION} as centos
 RUN set -x \
-    && yum makecache fast
+    && yum makecache
 
 FROM centos as build
 ARG BUILD_TOOLS
