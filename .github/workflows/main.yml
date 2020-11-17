@@ -22,7 +22,7 @@ jobs:
         with:
           push: true
           tags: ghcr.io/runsfor/envs/centos:7
-          target: centos
+          target: build
           build-args: |
             CENTOS_VERSION=7
       - name: Build centos8 image
@@ -30,7 +30,7 @@ jobs:
         with:
           push: true
           tags: ghcr.io/runsfor/envs/centos:8
-          target: centos
+          target: build
           build-args: |
             CENTOS_VERSION=8
       - name: Build cartridge-cli image
