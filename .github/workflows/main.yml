@@ -27,6 +27,8 @@ jobs:
           push: true
           tags: ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
           target: tarantool
+          cache-from: type=registry,ref=ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}-cache
+          cache-to: type=registry,ref=ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}-cache
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
@@ -37,6 +39,7 @@ jobs:
         image_type: ['base', 'build']
         tarantool: ['2.2', '2.3', '2.4', '2.5', '2.6']
     runs-on: ubuntu-latest
+    needs: build-centos
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: docker/setup-buildx-action@v1
@@ -52,6 +55,8 @@ jobs:
         with:
           push: true
           tags: ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
+          cache-from: type=registry,ref=ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
+          cache-to: type=registry,ref=ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
           target: tarantool
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
