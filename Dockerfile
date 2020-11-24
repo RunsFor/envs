@@ -42,5 +42,6 @@ RUN set -x \
     && yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm \
     && curl -L https://tarantool.io/release/${TARANTOOL_VERSION}/installer.sh | bash \
     && yum -y install tarantool \
-    && tarantoolctl rocks install luacheck
+    && tarantoolctl rocks install luacheck \
+    && tarantoolctl rocks install luatest
 ENV PATH="/.rocks/bin:${PATH}"
