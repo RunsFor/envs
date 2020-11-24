@@ -27,7 +27,7 @@ RUN set -x \
     && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo \
     && yum -y install ${BASE_TOOLS} \
     && yum clean all \
-    && pip3 install --no-cache-dir awscli
+    && pip3 install --no-cache-dir awscli flake8
 
 FROM base as build
 ARG BUILD_TOOLS
