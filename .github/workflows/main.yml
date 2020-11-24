@@ -28,7 +28,7 @@ jobs:
           target: tarantool
           tags: ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
           cache-from: type=registry,ref=ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
-          cache-to: type=inline
+          cache-to: type=registry,mode=max,ref=ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
@@ -59,7 +59,7 @@ jobs:
           cache-from: |
             type=registry,ref=ghcr.io/runsfor/envs/centos:${{ matrix.os }}-${{ matrix.image_type }}
             type=registry,ref=ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
-          cache-to: type=inline
+          cache-to: type=registry,mode=max,ref=ghcr.io/runsfor/envs/tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
