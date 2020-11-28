@@ -1,0 +1,13 @@
+name: Actions test
+
+on:
+  push:
+
+jobs:
+  setup-tarantool:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-tarantool
+        with:
+          version: 2.5
