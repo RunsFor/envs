@@ -35,11 +35,15 @@ RUN set -x \
     && yum -y install ${BUILD_TOOLS} \
     && yum clean all
 
-FROM ${IMAGE_TYPE} as tarantool
+
+FROM ${IMAGE_TYPE} as cartridge
 ARG CARTRIDGE_CLI_VERSION=2.4.0
+RUN yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm
+
+
+FROM cartridge as tarantool
 ARG TARANTOOL_VERSION=2.5
 RUN set -x \
-    && yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm \
     && curl -L https://tarantool.io/release/${TARANTOOL_VERSION}/installer.sh | bash \
     && yum -y install tarantool \
     && tarantoolctl rocks install luacheck

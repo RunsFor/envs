@@ -32,14 +32,48 @@ jobs:
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
+
+  build-cartridge:
+    strategy:
+      matrix:
+        os: ['7', '8']
+        cartridge: ['2.4.0']
+        image_type: ['base', 'build']
+    runs-on: ubuntu-latest
+    needs: build-centos
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build cartridge v${{ matrix.cartridge }}, centos v${{ matrix.os }} ${{ matrix.image_type }} image
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          target: cartridge
+          tags: |
+            ilyak/envs-cartridge:${{ matrix.os }}-${{ matrix.cartridge }}-${{ matrix.image_type }}
+            ilyak/envs-cartridge:${{ matrix.os }}-${{ matrix.cartridge }}-${{ matrix.image_type }}-${{ github.sha }}
+          cache-from: |
+            type=registry,ref=ilyak/envs-centos:${{ matrix.os }}-${{ matrix.image_type }}
+            type=registry,ref=ilyak/envs-cartridge:${{ matrix.os }}-${{ matrix.cartridge }}-${{ matrix.image_type }}
+          cache-to: type=inline
+          build-args: |
+            CENTOS_VERSION=${{ matrix.os }}
+            CARTRIDGE_CLI_VERSION=${{ matrix.cartridge }}
+            IMAGE_TYPE=${{ matrix.image_type }}
   build-tarantool:
     strategy:
       matrix:
         os: ['7', '8']
         image_type: ['base', 'build']
+        cartridge: ['2.4.0']
         tarantool: ['2.2', '2.3', '2.4', '2.5', '2.6']
     runs-on: ubuntu-latest
-    needs: build-centos
+    needs: build-cartridge
     steps:
       - uses: actions/checkout@v2.3.4
       - uses: docker/setup-buildx-action@v1
@@ -58,11 +92,11 @@ jobs:
             ilyak/envs-tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}-${{ github.sha }}
           cache-from: |
             type=registry,ref=ilyak/envs-centos:${{ matrix.os }}-${{ matrix.image_type }}
+            type=registry,ref=ilyak/envs-cartridge:${{ matrix.os }}-${{ matrix.cartridge }}-${{ matrix.image_type }}
             type=registry,ref=ilyak/envs-tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
-          cache-to: |
-            type=registry,mode=max,ref=ilyak/envs-tarantool:${{ matrix.os }}-${{ matrix.tarantool }}-${{ matrix.image_type }}
+          cache-to: type=inline
           build-args: |
             CENTOS_VERSION=${{ matrix.os }}
             IMAGE_TYPE=${{ matrix.image_type }}
-            CARTRIDGE_CLI_VERSION=2.4.0
+            CARTRIDGE_CLI_VERSION=${{ matrix.cartridge }}
             TARANTOOL_VERSION=${{ matrix.tarantool }}
