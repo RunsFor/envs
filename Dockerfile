@@ -21,6 +21,8 @@ RUN set -x \
     && yum -y install git cmake \
     && yum clean all
 
+FROM docker:dind as dind
+
 FROM centos-${CENTOS_VERSION} as base
 ARG BASE_TOOLS
 RUN set -x \
@@ -39,6 +41,13 @@ RUN set -x \
 FROM ${IMAGE_TYPE} as cartridge
 ARG CARTRIDGE_CLI_VERSION=2.4.0
 RUN yum -y install https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.x86_64.rpm
+
+
+FROM dind as cartridge-dind
+ARG CARTRIDGE_CLI_VERSION=2.4.0
+RUN set -x \
+    && wget https://github.com/tarantool/cartridge-cli/releases/download/${CARTRIDGE_CLI_VERSION}/cartridge-cli-${CARTRIDGE_CLI_VERSION}.Linux.amd64.tar.gz \
+    && tar xzf cartridge-cli-${CARTRIDGE_CLI_VERSION}.Linux.amd64.tar.gz -C /bin
 
 
 FROM cartridge as tarantool
