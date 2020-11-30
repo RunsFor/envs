@@ -4,18 +4,23 @@ Docker Environments for CI
 # Available versions
 
 centos: `7`, `8`
+cartridge: `2.4.0`
 tarantool: `2.2`, `2.3`, `2.4`, `2.5`, `2.6`
 image type: `base`, `build`
 
 # Image
 
-Image is build using following template: `ghcr.io/runsfor/envs/tarantool:<centos>-<tarantool>-<image_type>`
+Image is build using following template:
 
+- `registry.gitlab.com/runfor/envs/centos:<centos>-<image_type>`
+- `registry.gitlab.com/runfor/envs/cartridge:<centos>-<cartridge>-<image_type>`
+- `registry.gitlab.com/runfor/envs/cartridge-dind:<cartridge>`
+- `registry.gitlab.com/runfor/envs/tarantool:<centos>-<tarantool>-<image_type>`
 
 Example:
 
 ```bash
-$ docker run --rm -it ghcr.io/runsfor/envs/tarantool:8-2.6-base
+$ docker run --rm -it registry.gitlab.com/runfor/envs/tarantool:8-2.6-base
 [root@e320efd841b8 /]# tarantool --version | head -2
 Tarantool 2.6.1-0-gcfe0d1a55
 Target: Linux-x86_64-RelWithDebInfo
