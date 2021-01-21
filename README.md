@@ -4,8 +4,11 @@ Docker Environments for CI
 # Available versions
 
 centos: `7`, `8`
+
 cartridge: `2.4.0`
+
 tarantool: `2.2`, `2.3`, `2.4`, `2.5`, `2.6`
+
 image type: `base`, `build`
 
 # Image
@@ -43,6 +46,7 @@ Tarantool image includes version specified by the tag and it has [cartridge-cli]
 - cmake
 - which
 - wget
+- zip
 - unzip
 - docker-ce-cli
 - python3-pip

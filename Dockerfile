@@ -2,7 +2,7 @@
 
 ARG CENTOS_VERSION=7
 ARG IMAGE_TYPE=base
-ARG BASE_TOOLS="which wget unzip docker-ce-cli python3-pip"
+ARG BASE_TOOLS="which wget zip unzip docker-ce-cli python3-pip"
 ARG BUILD_TOOLS="make gcc-c++ glibc-devel libstdc++-devel lua-devel \
                  autoconf automake libtool gcc curl-devel"
 
