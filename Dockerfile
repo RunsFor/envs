@@ -17,7 +17,7 @@ RUN set -x \
 FROM centos:8 as centos-8
 RUN set -x \
     && yum -y install yum-utils \
-    && yum-config-manager --set-enabled PowerTools \
+    && yum-config-manager --set-enabled powertools \
     && yum -y install git cmake \
     && yum clean all
 
